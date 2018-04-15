@@ -20,3 +20,7 @@ Objective checklist
  name and their ghost
 - templates
 - authentication (user service)
+
+should account for no more ghosts available
+
+Resource for authentication/security

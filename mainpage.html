@@ -1,0 +1,42 @@
+<html>
+	<body>
+		<h1>Ghost Name Picker</h1>
+		<h2>Who are you? </h2>
+
+		<form action="/claim" method="post">
+			<div><input type="email" name="email_address" placeholder="Email" required></input></div>
+			<div><input type="text" name="name" placeholder="Name" required></input></div>
+			<div><input type="password" name="password" placeholder="Password" required></input></div>
+			<div>
+				<input type="submit" value="Submit"></input>
+				<input type="reset" value="Reset"></input>
+			</div>
+		</form>
+		<table>
+			<tr>
+				<th>Mail</th>
+				<th>Ghost</th>
+			</tr>
+			{% for user in users %}
+			<tr>
+				<td>{{user.email}}</td>
+				<td>{{user.ghost.name}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% if ghosts %}
+		<table>
+			<tr>
+				<th>Ghost</th>
+				<th>Description</th>
+			</tr>
+			{% for ghost in ghosts %}
+			<tr>
+				<td>{{ghost.name}}</td>
+				<td>{{ghost.description}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% endif %}
+	</body>
+</html>
