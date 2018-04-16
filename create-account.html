@@ -1,11 +1,8 @@
 <html>
   <body>
-    <h2>{{user.email}}</h2>
-    <h2>{{user.name}}</h2>
-{{pathstr}}
     <br/>
     {% if ghost %}
-    <h1>You've been assigned a ghost!</h1>
+    <h1>{{user.first_name}}, You've been assigned a ghost!</h1>
     <h2>You got: {{ghost.name}}</h2>
     <p>{{ghost.description}}</p>
     {% else %}

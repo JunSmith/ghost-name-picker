@@ -45,5 +45,5 @@ ghosts = [
         {'Zhong Kui': '(Chinese mythology): By some accounts, Zhong Kui is the ghost (Guĭ) of a man who failed his civil service exams and committed suicide, he is a vanquisher of ghosts and evil spirits: a ghost who hunts other ghosts.'},
         {'Zuul': '(Ghostbusters): The Gatekeeper of Gozer; minion of The Destructor. Lovely singing voice, but with an unfortunate tendency to manifest as a Terror Dog and/or take over your fridge.'}]
 
-def get_ghosts():
+def get():
     return ghosts

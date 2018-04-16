@@ -1,14 +1,30 @@
 <html>
 	<body>
 		<h1>Ghost Name Picker</h1>
+		{% if current_user %}
+		<h2>Welcome back {{current_user.ghost}} AKA {{current_user.email}}</h2>
+		<form action="/logout" method="post">
+			<div><input type="submit" value="Logout"></input></div>
+		</form>
+		{% else %}
 		<h2>Who are you? </h2>
 
-		<form action="/claim" method="post">
+		{% endif %}
+		<form action="/create-account" method="post">
 			<div><input type="email" name="email_address" placeholder="Email" required></input></div>
-			<div><input type="text" name="name" placeholder="Name" required></input></div>
+			<div><input type="text" name="first_name" placeholder="First name" required></input></div>
+			<div><input type="text" name="last_name" placeholder="Last name" required></input></div>
 			<div><input type="password" name="password" placeholder="Password" required></input></div>
 			<div>
-				<input type="submit" value="Submit"></input>
+				<input type="submit" value="Create Account"></input>
+				<input type="reset" value="Reset"></input>
+			</div>
+		</form>
+		<form action="/login" method="post">
+			<div><input type="email" name="email_address" placeholder="Email" required></input></div>
+			<div><input type="password" name="password" placeholder="Password" required></input></div>
+			<div>
+				<input type="submit" value="Login"></input>
 				<input type="reset" value="Reset"></input>
 			</div>
 		</form>

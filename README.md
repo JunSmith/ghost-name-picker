@@ -24,3 +24,10 @@ Objective checklist
 should account for no more ghosts available
 
 Resource for authentication/security
+https://www.abahgat.com/blog/user-authentication-with-webapp2-on-google-app-engine/
+Session reference - use for the login session - be sure to create a logout endpoint too
+http://webapp2.readthedocs.io/en/latest/api/webapp2_extras/sessions.html
+
+Need to create a checker to make sure the email hasn't been used yet
+
+email availability doesn't quite work right now

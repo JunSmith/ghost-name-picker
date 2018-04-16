@@ -2,12 +2,13 @@
 from google.appengine.ext import db
 
 class Ghost(db.Model):
-    name = db.StringProperty()
+    name = db.StringProperty(required=True)
     description = db.StringProperty(multiline = True)
     taken = db.BooleanProperty(default = False)
 
 class User(db.Model):
+    first_name = db.StringProperty(required=True)
+    last_name = db.StringProperty(required=True)
     email = db.EmailProperty(required=True)
-    name = db.StringProperty()
     password = db.StringProperty()
     ghost = db.ReferenceProperty(Ghost)

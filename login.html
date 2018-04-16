@@ -1,0 +1,7 @@
+{% if user %}
+<h2>Welcome {{user.ghost.name}} ({{user.email}})</h2>
+{% else %}
+<p>No users have been found, please try again</p>
+{% endif %}
+
+<a href="/">Home</a>
