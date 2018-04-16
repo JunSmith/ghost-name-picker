@@ -1,20 +1,16 @@
 # coding: utf-8
+from google.appengine.ext import db
+from google.appengine.ext.webapp import template
+from webapp2_extras import security, sessions
 import cgi
-import datetime
 import urllib
 import wsgiref.handlers
 import random
 import os
-
-from google.appengine.ext import db
 import models
-# from google.appengine.api import users
-from google.appengine.ext.webapp import template
 import ghost_vault
 import webapp2
 import sys
-from webapp2_extras import security
-from webapp2_extras import sessions
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -38,27 +34,29 @@ class BaseHandler(webapp2.RequestHandler):
 
 class MainPage(BaseHandler):
     def get(self):
-        # self.session['currentuser'] = 'testing'
         users = db.Query(models.User)
         ghosts = db.Query(models.Ghost)
-        path = os.path.join(os.path.dirname(__file__), 'mainpage.html')
+        user_ghosts = get_unused_ghosts()
         template_values = {
             'users': users,
-            'ghosts': ghosts
+            'ghosts': ghosts,
+            'available_ghosts': user_ghosts
             }
         current_user = self.session.get('current_user', None)
         if current_user:
             template_values['current_user'] = current_user
+        path = set_path('main-page.html')
         self.response.out.write(template.render(path, template_values))
 
-class Create_Account(webapp2.RequestHandler):
+class Create_Account(BaseHandler):
     def post(self):
         template_values = {}
         email = self.request.get('email_address')
         first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
         password = self.request.get('password')
-        assigned_ghost = get_unused_ghost()
+        assigned_ghost_name = self.request.get('assigned_ghost')
+        assigned_ghost = db.Query(models.Ghost).filter('name =', assigned_ghost_name).get()
         if email_availability(email):
             user = models.User(
                 email = email,
@@ -72,64 +70,68 @@ class Create_Account(webapp2.RequestHandler):
                 user.put()
                 template_values = {
                     'user': user,
-                    'ghost': assigned_ghost
+                    'ghost': assigned_ghost,
+                    'email_taken': False
                 }
-            path = os.path.join(os.path.dirname(__file__), 'create-account.html')
+            else:
+                template_values = {
+                    'email': email,
+                    'email_taken': True
+                }
+            path = set_path('create-account.html')
             self.response.out.write(template.render(path, template_values))
 
 def email_availability(email):
-    users = db.Query(models.User).filter("email ==", email)
+    users = db.Query(models.User).filter("email =", email).get()
     if users:
         return False
     else:
         return True
 
-class GhostList(webapp2.RequestHandler): # return a table of ghosts
-    def get(self):
-        ghost_entities = get_ghosts()
-        path = os.path.join(os.path.dirname(__file__), 'ghost-list.html')
-        template_values = {
-            'ghosts': ghost_entities
-        }
-        return template.render(path, template_values)
-
-class Login(BaseHandler): # log in page - will replace
+class Login(BaseHandler):
     def post(self):
         template_values = {}
         email = self.request.get('email_address')
         password = self.request.get('password')
-        # password_hash = generate_password_hash(password)
         users = db.Query(models.User).fetch(None)
-        # matching_users = users.filter(lambda x: security.check_password_hash(password, x.password))
         if(len(users)):
             matching_user = filter(lambda x: security.check_password_hash(password, x.password) and email == x.email, users)[0]
             template_values = {'user': matching_user}
             self.session['current_user'] = {'email': matching_user.email, 'ghost': matching_user.ghost.name}
-        path = os.path.join(os.path.dirname(__file__), 'login.html')
+        path = set_path('login.html')
         self.response.out.write(template.render(path, template_values))
-        # self.MainPage.get()
 
 class Logout(BaseHandler):
     def post(self):
         self.session['current_user'] = {}
         template_values = {}
-        path = os.path.join(os.path.dirname(__file__), 'logout.html')
+        path = os.path.join(*[os.path.dirname(__file__), 'templates', 'logout.html'])
         self.response.out.write(template.render(path, template_values))
 
+def set_path(file_name):
+    return os.path.join(*[os.path.dirname(__file__), 'templates', file_name])
 
-def get_unused_ghost():
+def get_unused_ghosts():
     ghost_entities = get_ghosts().filter('taken = ', False).fetch(None)
-    if len(ghost_entities) > 0:
-        return ghost_entities[random.randint(0, len(ghost_entities))]
+    ghost_count = len(ghost_entities)
+    if ghost_count > 0:
+        selected_ghosts = []
+        i = 0
+        limit = 3 if ghost_count >= 3 else ghost_count
+        while i < limit:
+            selected_ghost = ghost_entities[random.randint(0, ghost_count - 1)]
+            if selected_ghost not in selected_ghosts:
+                i = i + 1
+                selected_ghosts.append(selected_ghost)
+        return selected_ghosts
+
     else:
         return undefined
 
 def get_ghosts():
     ghosts_result = db.Query(models.Ghost)
     if(ghosts_result.get() == None):
-    # Add ghosts to the db
         store_ghosts()
-        # get_ghosts()
     else:
         return ghosts_result
 
@@ -151,7 +153,6 @@ config['webapp2_extras.sessions'] = {
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create-account', Create_Account),
-    ('/ghost-list', GhostList),
     ('/login', Login),
     ('/logout', Logout)
 ],

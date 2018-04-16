@@ -31,3 +31,9 @@ http://webapp2.readthedocs.io/en/latest/api/webapp2_extras/sessions.html
 Need to create a checker to make sure the email hasn't been used yet
 
 email availability doesn't quite work right now
+
+To create the app on google app engine
+>gcloud app create
+
+To deploy to google app engine
+>gcloud app deploy

@@ -1,5 +1,3 @@
-application: ghost-name-picker
-version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -13,11 +11,10 @@ libraries:
 handlers:
         - url: /templates
           static_dir: templates
-        
+          application_readable: true
+
         - url: /bootstrap
           static_dir: bootstrap
 
         - url: /.*
           script: main.application
-
- 

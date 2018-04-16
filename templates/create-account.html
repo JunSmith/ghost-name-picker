@@ -1,0 +1,20 @@
+<html>
+  <body>
+  	<link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+  	<link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  	<script src="../bootstrap/js/jquery.js"></script>
+    {% if email_taken %}
+    <h2>{{email}} has already been used to create a user!</h2>
+    {% else %}
+    {% if ghost %}
+    <h1>{{user.first_name}}, You've been assigned a ghost!</h1>
+    <h2>You got: {{ghost.name}}</h2>
+    <p>{{ghost.description}}</p>
+    {% else %}
+    <h2>Unable to assign a ghost, please try again</h2>
+    {% endif %}
+
+    {% endif %}
+    <a href="/">Home</a>
+  </body>
+</html>

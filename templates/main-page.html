@@ -1,0 +1,81 @@
+<html>
+	<link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="../bootstrap/js/jquery.js"></script>
+	<body>
+		<h1>Ghost Name Picker</h1>
+		{% if current_user %}
+		<h2>Welcome back {{current_user.ghost}} AKA {{current_user.email}}</h2>
+		<form action="/logout" method="post">
+			<div><input type="submit" value="Logout"></input></div>
+		</form>
+		{% else %}
+		<div class="container">
+			<h2>You don't look familiar, you want to join us?</h2>
+			<form action="/create-account" method="post">
+				<div><input type="email" name="email_address" placeholder="Email" required></input></div>
+				<div><input type="text" name="first_name" placeholder="First name" required></input></div>
+				<div><input type="text" name="last_name" placeholder="Last name" required></input></div>
+				<div><input type="password" name="password" placeholder="Password" required></input></div>
+				<div>
+		      <select name="assigned_ghost">
+		        {% for ghost in available_ghosts %}
+		        <option value="{{ghost.name}}">{{ghost.name}}</option>
+		        {% endfor %}
+		      </select>
+				</div>
+				<div>
+					<input type="submit" value="Create Account"></input>
+					<input type="reset" value="Reset"></input>
+				</div>
+			</form>
+		</div>
+		<div class="container">
+			<h2>If you're one of us, prove it</h2>
+			<form action="/login" method="post">
+				<div><input type="email" name="email_address" placeholder="Email" required></input></div>
+				<div><input type="password" name="password" placeholder="Password" required></input></div>
+				<div>
+					<input type="submit" value="Login"></input>
+					<input type="reset" value="Reset"></input>
+				</div>
+			</form>
+		</div>
+		{% endif %}
+		<div class="container">
+			{% if users %}
+			<table>
+				<tr>
+					<th>Email</th>
+					<th>Ghost</th>
+				</tr>
+				{% for user in users %}
+				<tr>
+					<td>{{user.email}}</td>
+					<td>{{user.ghost.name}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			{% endif %}
+		</div>
+		<br/>
+		<div class="container">
+			{% if ghosts %}
+			<table>
+				<tr>
+					<th>Ghost</th>
+					<th>Description</th>
+					<th>Taken</th>
+				</tr>
+				{% for ghost in ghosts %}
+				<tr>
+					<td>{{ghost.name}}</td>
+					<td>{{ghost.description}}</td>
+					<td>{{ghost.taken}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			{% endif %}
+		</div>
+	</body>
+</html>
