@@ -11,7 +11,6 @@ import models
 import ghost_vault
 import webapp2
 import sys
-import home
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -156,7 +155,7 @@ config['webapp2_extras.sessions'] = {
 }
 
 application = webapp2.WSGIApplication([
-    ('/', home.MainPage),
+    ('/', MainPage),
     ('/create-account', Create_Account),
     ('/login', Login),
     ('/logout', Logout)
