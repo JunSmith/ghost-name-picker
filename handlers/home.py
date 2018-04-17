@@ -7,12 +7,12 @@ import wsgiref.handlers
 import random
 import os
 import models
-import ghost_vault
 import webapp2
 import sys
-import main
+from base import BaseHandler
+from utils.path_setter import set_path
 
-class MainPage(main.BaseHandler):
+class HomePage(BaseHandler):
     def get(self):
         users = db.Query(models.User)
         ghosts = db.Query(models.Ghost)
@@ -28,3 +28,20 @@ class MainPage(main.BaseHandler):
             template_values['current_user'] = current_user
         path = set_path('main-page.html')
         self.response.out.write(template.render(path, template_values))
+
+def get_unused_ghosts():
+    ghost_entities = db.Query(models.Ghost).filter('taken = ', False).fetch(None)
+    ghost_count = len(ghost_entities)
+    if ghost_count > 0:
+        selected_ghosts = []
+        i = 0
+        limit = 3 if ghost_count >= 3 else ghost_count
+        while i < limit:
+            selected_ghost = ghost_entities[random.randint(0, ghost_count - 1)]
+            if selected_ghost not in selected_ghosts:
+                i = i + 1
+                selected_ghosts.append(selected_ghost)
+        return selected_ghosts
+
+    else:
+        return undefined

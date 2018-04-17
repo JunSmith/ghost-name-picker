@@ -5,10 +5,13 @@
 	<body>
 		<h1>Ghost Name Picker</h1>
 		{% if current_user %}
-		<h2>Welcome back {{current_user.ghost}} AKA {{current_user.email}}</h2>
-		<form action="/logout" method="post">
-			<div><input type="submit" value="Logout"></input></div>
-		</form>
+		<div class="container">
+			<h2>Welcome back {{curre_user.first_name}} "{{current_user.ghost}}" {{current_user.last_name}}</h2>
+			<form action="/logout" method="post">
+				<div><input type="submit" value="Logout"></input></div>
+			</form>
+		</div>
+		<br/>
 		{% else %}
 		<div class="container">
 			<h2>You don't look familiar, you want to join us?</h2>

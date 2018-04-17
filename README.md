@@ -11,17 +11,22 @@ This API contains four pages
 - Logout
 The home page displays all the ghosts as a table, displaying their name, description and their availability. Should there be any users that have signed up, a table will display of users with their ghost name. The page uses a session based service and will display the currently signed in user at the top of the page if there is one as well as a button to sign out, otherwise, account creation and account sign in forms will show leading to their respective pages. All pages aside from the home page primarily serve to indicate the forms leading to their pages have been correctly filled out and submitted.
 The Create account page is displayed when the user fills out and submits the form to create an account. All fields are required to successfully submit the form. The email is checked to see if one of the same name has already been submitted, the request to create an account if rejected if true. Should the user be successful, a page will be served to show the user and their selected ghost.
-The Login page serves a similair purpose to the Create account page - namely only for confirmation of form submission. The server will check and compare the password to the SHA-12 encrypted passwords stored in the database along with the emails submitted and emails stored in the database. In the case of a match, a user session is created to persist the user as being logged in until they are logged out or when the session expires.
+The Login page serves a similair purpose to the Create account page - namely only for confirmation of form submission. The server will check and compare the password to the encrypted passwords stored in the database along with the emails submitted and emails stored in the database. In the case of a match, a user session is created to persist the user as being logged in until they are logged out or when the session expires.
 The Logout page is served on pressing the "logout" button, removing the current user session.
 ## Technology
 Uses Google App Engine to build and deploy (more specifically Google Cloud Engine for deployment).
-Written fully in Python 2.
+
+Written fully in Python 2.7.
+
 Uses Datastore as database engine to store the users and ghosts assigned to the users.  
+
 [Bootstrap](https://getbootstrap.com/) is used to supplement the views visible to the user and is the toolkit to supplement the HTML with CSS classes along with Django-esque notation to handle conditional logic such as:
 ```
 {% if something_to_be_true %}
 {% endif %}
 ```
+
+Encryption is handled by Secure Hash Algorithm 1 (SHA1) used to encrypt sensitive fields such as passwords, after passwords have been submitted, user passwords are never revealed. Comparison is performed by encrypting the hash of a given string to the hashed string in the database.
 ## Further Notes
 ### Improvability/Limitations
 This project could use a better framework to request data from the API; as of date, HTML form requests are sent directly to the Python backend to fulfill the client's request.
