@@ -1,4 +1,4 @@
-# Ghost Name Picker
+# [Ghost Name Picker](https://ghost-name-picker.appspot.com/)
 
 A simple API to let you choose one of three randomly selected unique ghosts from a list of available ghosts.
 
