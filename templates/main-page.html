@@ -46,13 +46,11 @@
 			{% if users %}
 			<table>
 				<tr>
-					<th>Email</th>
-					<th>Ghost</th>
+					<th>Our friends</th>
 				</tr>
 				{% for user in users %}
 				<tr>
-					<td>{{user.email}}</td>
-					<td>{{user.ghost.name}}</td>
+					<td>{{user.first_name}} "{{user.ghost.name}}" {{user.last_name}}</td>
 				</tr>
 				{% endfor %}
 			</table>

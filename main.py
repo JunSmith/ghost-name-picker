@@ -11,6 +11,7 @@ import models
 import ghost_vault
 import webapp2
 import sys
+import home
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -38,10 +39,12 @@ class MainPage(BaseHandler):
         ghosts = db.Query(models.Ghost)
         user_ghosts = get_unused_ghosts()
         template_values = {
-            'users': users,
+            # 'users': users,
             'ghosts': ghosts,
             'available_ghosts': user_ghosts
             }
+        if len(users.fetch(None)) > 0:
+            template_values['users'] = users
         current_user = self.session.get('current_user', None)
         if current_user:
             template_values['current_user'] = current_user
@@ -95,9 +98,11 @@ class Login(BaseHandler):
         password = self.request.get('password')
         users = db.Query(models.User).fetch(None)
         if(len(users)):
-            matching_user = filter(lambda x: security.check_password_hash(password, x.password) and email == x.email, users)[0]
-            template_values = {'user': matching_user}
-            self.session['current_user'] = {'email': matching_user.email, 'ghost': matching_user.ghost.name}
+            matching_users = filter(lambda x: security.check_password_hash(password, x.password) and email == x.email, users)
+            matching_user = matching_users[0] if len(matching_users) > 0 else None
+            if matching_user:
+                template_values = {'user': matching_user}
+                self.session['current_user'] = {'first_name': matching_user.first_name, 'ghost': matching_user.ghost.name}
         path = set_path('login.html')
         self.response.out.write(template.render(path, template_values))
 
@@ -151,7 +156,7 @@ config['webapp2_extras.sessions'] = {
 }
 
 application = webapp2.WSGIApplication([
-    ('/', MainPage),
+    ('/', home.MainPage),
     ('/create-account', Create_Account),
     ('/login', Login),
     ('/logout', Logout)

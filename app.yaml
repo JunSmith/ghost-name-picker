@@ -17,4 +17,4 @@ handlers:
           static_dir: bootstrap
 
         - url: /.*
-          script: main.application
+          script: handlers.main.application

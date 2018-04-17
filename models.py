@@ -10,5 +10,5 @@ class User(db.Model):
     first_name = db.StringProperty(required=True)
     last_name = db.StringProperty(required=True)
     email = db.EmailProperty(required=True)
-    password = db.StringProperty()
+    password = db.StringProperty(required=True)
     ghost = db.ReferenceProperty(Ghost)
